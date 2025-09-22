@@ -92,7 +92,7 @@ npm run preview
 
 Will be deployed on **Vercel** soon.
 
-👉 **Placeholder:** [Live Demo](https://your-vercel-link.vercel.app)
+👉 **Placeholder:** [Live Demo](https://vision-ui-dashboard-eight.vercel.app/)
 
 ---
 
@@ -110,14 +110,6 @@ Will be deployed on **Vercel** soon.
   <img src="./public/screenshots/Sign-Up.webp" width="30%" />
   <img src="./public/screenshots/Sign-In.webp" width="30%" />
 </p>
-
----
-
-## 🎥 Video Demo
-
-Add a walk through video link when ready:
-
-**▶ Watch Demo:** [https://your-demo-video-link](https://your-demo-video-link)
 
 ---
 
