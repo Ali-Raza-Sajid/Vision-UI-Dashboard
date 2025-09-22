@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 @layer utilities {
   .bg-custom-gradient {
@@ -18,7 +18,7 @@
   }
   .bg-brand:hover {
     /* transform: scale(1.02); */
-    box-shadow: 0 0 25px 5px rgba(30, 64, 175, 0.5); 
+    box-shadow: 0 0 25px 5px rgba(30, 64, 175, 0.5);
   }
   .bg-primary {
     background-color: var(--primary);
@@ -57,9 +57,9 @@
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  color: var(--default); 
-  --primary: #2563eb; 
-  --secondary: #9ca3af; 
+  color: var(--default);
+  --primary: #2563eb;
+  --secondary: #9ca3af;
   --default: #ffffff;
   --brand-gradient: linear-gradient(
     to bottom right,
@@ -67,4 +67,70 @@
     transparent,
     rgba(8, 12, 32, 0.74)
   );
+}
+
+@layer components {
+  .loader-3d {
+    position: relative;
+    width: 4rem;
+    height: 4rem;
+    transform-style: preserve-3d;
+    animation: loader-3d-spin 1.8s linear infinite;
+  }
+
+  .loader-3d span {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    border: 3px solid rgba(37, 99, 235, 0.35);
+    border-top-color: rgba(99, 102, 241, 0.9);
+    border-left-color: rgba(59, 130, 246, 0.55);
+    filter: drop-shadow(0 0 12px rgba(37, 99, 235, 0.65));
+    opacity: 0.8;
+    animation: loader-3d-glow 1.6s ease-in-out infinite;
+  }
+
+  .loader-3d span:nth-child(1) {
+    transform: rotateX(65deg);
+  }
+
+  .loader-3d span:nth-child(2) {
+    transform: rotateY(65deg);
+    animation-delay: 0.25s;
+  }
+
+  .loader-3d span:nth-child(3) {
+    transform: rotateZ(45deg);
+    animation-delay: 0.5s;
+  }
+
+  .loader-3d::after {
+    content: "";
+    position: absolute;
+    inset: 35%;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.55), transparent 70%);
+    transform: translateZ(-24px);
+    filter: blur(6px);
+  }
+}
+
+@keyframes loader-3d-spin {
+  0% {
+    transform: rotateX(22deg) rotateY(0deg);
+  }
+  100% {
+    transform: rotateX(22deg) rotateY(360deg);
+  }
+}
+
+@keyframes loader-3d-glow {
+  0%,
+  100% {
+    opacity: 0.45;
+    filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.45));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 18px rgba(59, 130, 246, 0.75));
+  }
 }

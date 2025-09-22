@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Background from "../component/Background";
 import Footer from "../component/Footer";
+import Loader3D from "../component/Loader3D";
+import useImageLoader from "../hooks/useImageLoader";
+
+const BANNER_IMAGE = "/Login.webp";
 
 const Login: React.FC = () => {
   const { login } = useAuth();
@@ -11,6 +15,7 @@ const Login: React.FC = () => {
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [animate, setAnimate] = useState<boolean>(false);
   const navigate = useNavigate();
+  const { loaded: bannerLoaded, failed: bannerFailed } = useImageLoader(BANNER_IMAGE);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
@@ -24,53 +29,67 @@ const Login: React.FC = () => {
       localStorage.removeItem("password");
     }
 
-    navigate("/"); // Redirect after login
+    navigate("/");
   };
 
   const handleSignUpClick = (e: React.MouseEvent<HTMLAnchorElement>): void => {
     e.preventDefault();
-    // On desktop → animate then navigate
     if (window.innerWidth >= 768) {
       setAnimate(false);
       setTimeout(() => {
         navigate("/signup");
       }, 2000);
     } else {
-      // On mobile → navigate immediately
       navigate("/signup");
     }
   };
 
   useEffect(() => {
-    // Only trigger animation on desktop
-    if (window.innerWidth >= 768) {
-      setTimeout(() => {
-        setAnimate(true);
-      }, 0);
-    } else {
-      setAnimate(true); // Mobile: keep static layout
+    if (!bannerLoaded) {
+      return;
     }
-  }, []);
+
+    if (window.innerWidth >= 768) {
+      const timeout = window.setTimeout(() => setAnimate(true), 0);
+      return () => window.clearTimeout(timeout);
+    }
+
+    setAnimate(true);
+  }, [bannerLoaded]);
 
   return (
     <section className="h-screen w-screen absolute top-0 left-0 z-20 grid md:grid-cols-2">
       <Background />
 
-      {/* Left animated image block (desktop only) */}
       <div
-        className={`hidden md:flex flex-col justify-center items-center bg-[url('Login.webp')] bg-no-repeat bg-cover z-30 md:absolute md:h-screen w-screen h-screen 
+        className={`hidden md:flex relative flex-col justify-center items-center bg-[#060b26] bg-no-repeat bg-cover bg-center z-30 md:absolute md:h-screen w-screen h-screen
         md:transition-all md:duration-[2000ms] md:ease-in-out
         ${animate ? "md:w-[50vw] md:right-[50vw]" : "md:w-[100vw] md:right-0"}`}
+        style={bannerLoaded && !bannerFailed ? { backgroundImage: `url(${BANNER_IMAGE})` } : undefined}
       >
-        <h2 className="md:text-[1.5vw] text-2xl">INSPIRED BY THE FUTURE</h2>
-        <h1 className="font-semibold md:text-[2.35vw] text-3xl md:pt-[.4vw] pt-1">
-          THE Vision UI DASHBOARD
-        </h1>
+        {!bannerLoaded ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-[#060b26]/80 backdrop-blur-md">
+            <Loader3D label="Loading visual" />
+          </div>
+        ) : null}
+
+        {bannerLoaded ? (
+          <>
+            <h2 className="md:text-[1.5vw] text-2xl">INSPIRED BY THE FUTURE</h2>
+            <h1 className="font-semibold md:text-[2.35vw] text-3xl md:pt-[.4vw] pt-1">
+              THE Vision UI DASHBOARD
+            </h1>
+            {bannerFailed ? (
+              <p className="mt-6 text-sm text-secondary">
+                We couldn't load the hero image. Please try refreshing the page.
+              </p>
+            ) : null}
+          </>
+        ) : null}
       </div>
 
-      {/* Right login form */}
       <div
-        className={`flex justify-center items-center h-full 
+        className={`flex justify-center items-center h-full
         md:transition-all md:duration-[2000ms] md:ease-in-out
         ${animate ? "md:opacity-100 md:translate-x-[50vw]" : "md:opacity-0 md:translate-x-0"}`}
       >
@@ -81,12 +100,8 @@ const Login: React.FC = () => {
           </h3>
 
           <form onSubmit={handleSubmit}>
-            {/* Username */}
             <div className="md:mt-[2.5vw] mt-8">
-              <label
-                className="md:text-[1.1vw] text-sm font-bold"
-                htmlFor="username"
-              >
+              <label className="md:text-[1.1vw] text-sm font-bold" htmlFor="username">
                 Username
               </label>
               <input
@@ -100,12 +115,8 @@ const Login: React.FC = () => {
               />
             </div>
 
-            {/* Password */}
             <div className="md:my-[1.25vw] my-4">
-              <label
-                className="md:text-[1.1vw] text-sm font-bold"
-                htmlFor="password"
-              >
+              <label className="md:text-[1.1vw] text-sm font-bold" htmlFor="password">
                 Password
               </label>
               <input
@@ -119,7 +130,6 @@ const Login: React.FC = () => {
               />
             </div>
 
-            {/* Remember me */}
             <div className="flex items-center md:mb-[2.25vw] mb-6">
               <input
                 className="md:mr-[.75vw] mr-2 md:h-[1.5vw] h-4 md:w-[1.25vw] w-4"
@@ -133,7 +143,6 @@ const Login: React.FC = () => {
               </label>
             </div>
 
-            {/* Login button */}
             <button
               className="bg-primary hover:bg-blue-700 md:text-[1.25vw] text-base font-bold md:py-[.5vw] py-2 w-full rounded focus:outline-none focus:shadow-outline"
               type="submit"
@@ -142,7 +151,6 @@ const Login: React.FC = () => {
             </button>
           </form>
 
-          {/* Sign up */}
           <p className="mt-4 text-center md:text-[1vw] text-xs text-secondary">
             Don't have an account?{" "}
             <a
@@ -156,7 +164,6 @@ const Login: React.FC = () => {
         </div>
       </div>
 
-      {/* Footer */}
       <div className="absolute md:w-[85%] w-full md:left-[5%] bottom-0 z-40">
         <Footer />
       </div>
