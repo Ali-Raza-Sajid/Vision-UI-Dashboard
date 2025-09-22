@@ -106,8 +106,8 @@ Will be deployed on **Vercel** soon.
   <img src="./public/screenshots/Profile.webp" width="30%" />
 </p>
 <p align="center">
-  <img src="./public/screenshots/Billing.webp" width="30%" />
   <img src="./public/screenshots/Sign-Up.webp" width="30%" />
+  <img src="./public/screenshots/Billing.webp" width="30%" />
   <img src="./public/screenshots/Sign-In.webp" width="30%" />
 </p>
 
